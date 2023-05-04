@@ -24,7 +24,7 @@ def splitAngles(dataframe):
         diffs = df["stretchAmt"].diff()
         df["stretchDiffs"] = diffs.replace(0, pd.NA).ffill().fillna(0)
         outputPath = os.path.join(
-            f"./measurements_csv/{meas}/angle/", f"angle_{angle}.csv")
+            f"./VCO_stretch/measurements_csv/{meas}/angle/", f"angle_{angle}.csv")
         df.to_csv(outputPath, index=False)
         # create csv for the rising part of the angle
         splitRising(df, angle)
@@ -35,7 +35,7 @@ def splitRising(dataframe, angle):
     # df = dataframe.copy().dropna()
     df_rising = dataframe[(dataframe["stretchDiffs"] >= 0)]
     outputPath = os.path.join(
-        f"./measurements_csv/{meas}/rising/", f"angle_{angle}.csv")
+        f"./VCO_stretch/measurements_csv/{meas}/rising/", f"angle_{angle}.csv")
     df_rising.to_csv(outputPath, index=False)
 
 
@@ -44,10 +44,10 @@ def splitFalling(dataframe, angle):
     df_falling = dataframe[(dataframe["stretchDiffs"] < 0) | (
         dataframe["stretchAmt"] == max_stretch_amt) & (dataframe["stretchAngle"] == angle)]
     outputPath = os.path.join(
-        f"./measurements_csv/{meas}/falling/", f"angle_{angle}.csv")
+        f"./VCO_stretch/measurements_csv/{meas}/falling/", f"angle_{angle}.csv")
     df_falling.to_csv(outputPath, index=False)
 
 
 if __name__ == '__main__':
-    df = importCSV(f"./measurements_csv/{meas}/Measurement_stretch_2.csv")
+    df = importCSV(f"./VCO_stretch/measurements_csv/{meas}/Measurement_stretch_2.csv")
     splitAngles(df)

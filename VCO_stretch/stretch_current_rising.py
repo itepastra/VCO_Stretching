@@ -57,28 +57,28 @@ if __name__ == "__main__":
     meas = "meas_2"
 
     angle = input("please give the whole part of the angle to plot. ")
-    df = helpers.importCSV(f"./measurements_csv/{meas}/rising/angle_{angle}.0.csv")
-    if not os.path.exists(f'./figures/{meas}/'):
-        os.makedirs(f'./figures/{meas}/')
+    df = helpers.importCSV(f"./VCO_stretch/measurements_csv/{meas}/rising/angle_{angle}.0.csv")
+    if not os.path.exists(f'./VCO_stretch/figures/{meas}/'):
+        os.makedirs(f'./VCO_stretch/figures/{meas}/')
 
-    if not os.path.exists(f'./figures/{meas}/{angle}/'):
-        os.makedirs(f'./figures/{meas}/{angle}/')
+    if not os.path.exists(f'./VCO_stretch/figures/{meas}/{angle}/'):
+        os.makedirs(f'./VCO_stretch/figures/{meas}/{angle}/')
     # print(df)
     fig1 = AbsStretchGraphAmps(df,"VDD_VCO1_amps")
-    fig1.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_VDD1_amps.png", dpi=500)
+    fig1.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD1_amps.png", dpi=500)
     fig2 = AbsStretchGraphAmps(df,"VDD_VCO2_amps")
-    fig2.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_VDD2_amps.png", dpi=500)
+    fig2.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD2_amps.png", dpi=500)
     fig3 = AbsStretchGraphAmps(df,"VDD_driver_amps")
-    fig3.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_driver_amps.png", dpi=500)
+    fig3.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_driver_amps.png", dpi=500)
     fig4 = AbsStretchGraphAmps(df,"VDD_ring_amps")
-    fig4.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_ring_amps.png", dpi=500)
+    fig4.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_ring_amps.png", dpi=500)
     fig5 = RelativeStretchGraphAmps(df,"VDD_VCO1_amps")
-    fig5.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_VDD1_amps_rel.png", dpi=500)
+    fig5.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD1_amps_rel.png", dpi=500)
     fig6 = RelativeStretchGraphAmps(df,"VDD_VCO2_amps")
-    fig6.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_VDD2_amps_rel.png", dpi=500)
+    fig6.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD2_amps_rel.png", dpi=500)
     fig7 = RelativeStretchGraphAmps(df,"VDD_driver_amps")
-    fig7.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_driver_amps_rel.png", dpi=500)
+    fig7.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_driver_amps_rel.png", dpi=500)
     fig8 = RelativeStretchGraphAmps(df,"VDD_ring_amps")
-    fig8.savefig(f"./figures/{meas}/{angle}/stretch1_up_{angle}_ring_amps_rel.png", dpi=500)
+    fig8.savefig(f"./VCO_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_ring_amps_rel.png", dpi=500)
 
     # plt.show()

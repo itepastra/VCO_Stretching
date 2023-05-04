@@ -22,8 +22,8 @@ def RosetteCalc(gaugeResistances: Tuple[float, float, float], gaugeBases: Tuple[
 
 
 def ModifyToCSV(filename):
-    filePath = f"./measurements/{filename}"
-    outputPath = f"./data/{meas}/{filename}.csv"
+    filePath = f"./VCO_diode_stretch/measurements/{filename}"
+    outputPath = f"./VCO_diode_stretch/data/{meas}/{filename}.csv"
 
     df = pd.read_csv(filePath, sep='\t', header=None)
     df.columns = ["date", "time", "Vctrl", "stretchAmt", "stretchAngle", "AmtFreq1", "Freq1", "errFreq1", "AmtAmp1", "Amp1", "errAmp1", "AmtFreq2", "Freq2", "errFreq2",
@@ -47,8 +47,8 @@ def ModifyToCSV(filename):
 
 
 def diodeCSV(filename):
-    filePath = f"./measurements/{filename}"
-    outputPath = f"./data/{meas}/{filename}.csv"
+    filePath = f"./VCO_diode_stretch/measurements/{filename}"
+    outputPath = f"./VCO_diode_stretch/data/{meas}/{filename}.csv"
 
     df = pd.read_csv(filePath, sep='\t', header=None)
     df.columns = ["date", "time",  "stretchAngle", "stretchAmt", "Vtarget", "VDD_VCO1_shunt", "VDD_driver_shunt", "VDD",
@@ -96,11 +96,11 @@ def splitAngles(dataframe, affix=""):
         diffs = df["stretchAmt"].diff()
         df["stretchDiffs"] = diffs.replace(0, pd.NA).ffill().fillna(0)
 
-        if not os.path.exists(f'./data/{meas}/angle/'):
-            os.makedirs(f'./data/{meas}/angle/')
+        if not os.path.exists(f'./VCO_diode_stretch/data/{meas}/angle/'):
+            os.makedirs(f'./VCO_diode_stretch/data/{meas}/angle/')
 
         outputPath = os.path.join(
-            f"./data/{meas}/angle/", f"angle_{angle}{affix}.csv")
+            f"./VCO_diode_stretch/data/{meas}/angle/", f"angle_{angle}{affix}.csv")
         df.to_csv(outputPath, index=False)
         # create csv for the rising part of the angle
         splitRising(df, angle, affix)
@@ -110,23 +110,23 @@ def splitAngles(dataframe, affix=""):
 def splitRising(dataframe, angle, affix=""):
     # df = dataframe.copy().dropna()
 
-    if not os.path.exists(f'./data/{meas}/rising/'):
-        os.makedirs(f'./data/{meas}/rising/')
+    if not os.path.exists(f'./VCO_diode_stretch/data/{meas}/rising/'):
+        os.makedirs(f'./VCO_diode_stretch/data/{meas}/rising/')
     df_rising = dataframe[(dataframe["stretchDiffs"] >= 0)]
     outputPath = os.path.join(
-        f"./data/{meas}/rising/", f"angle_{angle}{affix}.csv")
+        f"./VCO_diode_stretch/data/{meas}/rising/", f"angle_{angle}{affix}.csv")
     df_rising.to_csv(outputPath, index=False)
 
 
 def splitFalling(dataframe, angle, affix=""):
 
-    if not os.path.exists(f'./data/{meas}/falling/'):
-        os.makedirs(f'./data/{meas}/falling/')
+    if not os.path.exists(f'./VCO_diode_stretch/data/{meas}/falling/'):
+        os.makedirs(f'./VCO_diode_stretch/data/{meas}/falling/')
     max_stretch_amt = dataframe["stretchAmt"].max()
     df_falling = dataframe[(dataframe["stretchDiffs"] < 0) | (
         dataframe["stretchAmt"] == max_stretch_amt) & (dataframe["stretchAngle"] == angle)]
     outputPath = os.path.join(
-        f"./data/{meas}/falling/", f"angle_{angle}{affix}.csv")
+        f"./VCO_diode_stretch/data/{meas}/falling/", f"angle_{angle}{affix}.csv")
     df_falling.to_csv(outputPath, index=False)
 
 
@@ -136,15 +136,15 @@ if (__name__ == "__main__"):
 
     diodeFilename = filename + "_diode"
 
-    if not os.path.exists(f'./data/{meas}'):
-        os.makedirs(f'./data/{meas}')
+    if not os.path.exists(f'./VCO_diode_stretch/data/{meas}'):
+        os.makedirs(f'./VCO_diode_stretch/data/{meas}')
 
     ModifyToCSV(filename)
     diodeCSV(diodeFilename)
-    df = importCSV(f"./data/{meas}/{filename}.csv")
+    df = importCSV(f"./VCO_diode_stretch/data/{meas}/{filename}.csv")
     splitAngles(df)
 
-    df2 = importDiodeCSV(f"./data/{meas}/{diodeFilename}.csv")
+    df2 = importDiodeCSV(f"./VCO_diode_stretch/data/{meas}/{diodeFilename}.csv")
     splitAngles(df2, affix="_diode")
 
 

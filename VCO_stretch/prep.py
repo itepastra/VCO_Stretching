@@ -11,8 +11,8 @@ def ShuntCalc(voltageDiff: float, shuntResistance: float) -> float:
 
 def ModifyToCSV(filename):
     print("heya")
-    filePath = f"./measurements/{filename}"
-    outputPath = f"./measurements_csv/{meas}/{filename}.csv"
+    filePath = f"./VCO_stretch/measurements/{filename}"
+    outputPath = f"./VCO_stretch/measurements_csv/{meas}/{filename}.csv"
 
     df = pd.read_csv(filePath, sep='\t', header=None)
     df.columns = ["date", "time", "Vctrl", "stretchAmt", "stretchAngle", "Freq1", "errFreq1", "Amp1", "errAmp1", "Freq2", "errFreq2", "Amp2", "errAmp2", "VDD_VCO1_shunt", "VDD_driver_shunt", "VDD", "VDD_VCO2_shunt", "VDD_ring_shunt", "strain_1", "strain_2", "strain_3", "temp"]

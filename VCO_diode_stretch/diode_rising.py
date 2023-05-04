@@ -200,24 +200,24 @@ if __name__ == "__main__":
     meas = "meas_3"
 
     angle = input("please give the whole part of the angle to plot. ")
-    df = importCSV(f"./data/{meas}/rising/angle_{angle}.0_diode.csv")
-    if not os.path.exists(f'./figures/{meas}/'):
-        os.makedirs(f'./figures/{meas}/')
-    if not os.path.exists(f'./figures/{meas}/{angle}/'):
-        os.makedirs(f'./figures/{meas}/{angle}/')
+    df = importCSV(f"./VCO_diode_stretch/data/{meas}/rising/angle_{angle}.0_diode.csv")
+    if not os.path.exists(f'./VCO_diode_stretch/figures/{meas}/'):
+        os.makedirs(f'./VCO_diode_stretch/figures/{meas}/')
+    if not os.path.exists(f'./VCO_diode_stretch/figures/{meas}/{angle}/'):
+        os.makedirs(f'./VCO_diode_stretch/figures/{meas}/{angle}/')
     print(df)
     fig = MakeStretchGraph1(df)
-    fig.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_diode.png", dpi=500)
+    fig.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_diode.png", dpi=500)
     fig2 = RelativeStretchGraph1(df)
-    fig2.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_rel_diode.png", dpi=500)
+    fig2.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_rel_diode.png", dpi=500)
     fig3 = MakeStretchGraph2(df)
-    fig3.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_diode_alt.png", dpi=500)
+    fig3.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_diode_alt.png", dpi=500)
     fig4 = RelativeStretchGraph2(df)
-    fig4.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_rel_diode_alt.png", dpi=500)
+    fig4.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_rel_diode_alt.png", dpi=500)
     fig5 = MakeStretchGraph3(df)
-    fig5.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_diode_vin.png", dpi=500)
+    fig5.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_diode_vin.png", dpi=500)
     fig6 = RelativeStretchGraph3(df)
-    fig6.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_rel_diode_vin.png", dpi=500)
+    fig6.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_rel_diode_vin.png", dpi=500)
     fig7 = RelativeStretchGraph4(df)
-    fig7.savefig(f"./figures/{meas}/{angle}/stretch_up_{angle}_rel_diode_vina.png", dpi=500)
+    fig7.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_rel_diode_vina.png", dpi=500)
     # plt.show()

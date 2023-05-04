@@ -64,8 +64,8 @@ def MakeStretchGraph(dataframe):
 
 if __name__ == "__main__":
     angle = input("please give the whole part of the angle to plot. ")
-    df = importCSV(f"./measurements_csv/{meas}/rising/angle_{angle}.0.csv")
+    df = importCSV(f"./VCO_stretch/measurements_csv/{meas}/rising/angle_{angle}.0.csv")
     # print(df)
     fig2 = MakeStretchGraph(df)
-    fig2.savefig(f"./figures/{meas}/gauge2_up_{angle}.png", dpi=500)
+    fig2.savefig(f"./VCO_stretch/figures/{meas}/gauge2_up_{angle}.png", dpi=500)
     plt.show()
