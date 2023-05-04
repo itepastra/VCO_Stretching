@@ -34,20 +34,53 @@ def MakeStretchGraph(dataframe):
     fig.tight_layout()
     return fig
 
+def angleStrainGraph(dataframe):
+    fig, ax1 = plt.subplots()
+
+
+    groups = dataframe.groupby("stretchAmt")
+    strain_avg = groups["strain"].mean()
+    angle_avg = groups["angle"].mean()
+    strain_std = groups["strain"].std()
+    angle_std = groups["angle"].std()
+
+    fig.suptitle(df["stretchAngle"][0])
+
+    color = 'tab:red'
+    ax1.set_xlabel('strain (%)')
+    ax1.set_ylabel('angle', color=color)
+    # ax1.plot(df['stretchAmt']*100, df['angle'], color=color)
+    ax1.errorbar(angle_avg.index / L0 * 100, angle_avg.values, yerr=angle_std.values, label="angle", color=color)
+    ax1.tick_params(axis='y', labelcolor=color)
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+    color = 'tab:blue'
+    ax2.set_ylabel('strain', color=color)  # we already handled the x-label with ax1
+    ax2.errorbar(strain_avg.index / L0 * 100, strain_avg.values, yerr=strain_std.values, label="strain",color=color)
+    ax2.tick_params(axis='y', labelcolor=color)
+
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    return fig
+
+
 if __name__ == "__main__":
 
     L0 = 0.1001
     meas = "meas_3"
 
     angle = input("please give the whole part of the angle to plot. ")
-    df = helpers.importCSV(f"./data/{meas}/rising/angle_{angle}.0.csv")
-    if not os.path.exists(f'./figures/{meas}/'):
-        os.makedirs(f'./figures/{meas}/')
+    df = helpers.importCSV(f"./VCO_diode_stretch/data/{meas}/rising/angle_{angle}.0.csv")
+    if not os.path.exists(f'./VCO_diode_stretch/figures/{meas}/'):
+        os.makedirs(f'./VCO_diode_stretch/figures/{meas}/')
 
-    if not os.path.exists(f'./figures/{meas}/{angle}/'):
-        os.makedirs(f'./figures/{meas}/{angle}/')
+    if not os.path.exists(f'./VCO_diode_stretch/figures/{meas}/{angle}/'):
+        os.makedirs(f'./VCO_diode_stretch/figures/{meas}/{angle}/')
     # print(df)
     fig = MakeStretchGraph(df)
-    fig.savefig(f"./figures/{meas}/{angle}/strainGauges.png", dpi=500)
+    fig.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/strainGauges.png", dpi=500)
+    
+    fig2 = angleStrainGraph(df)
+    fig2.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/strainangle.png", dpi=500)
 
     plt.show()

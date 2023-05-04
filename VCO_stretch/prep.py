@@ -19,10 +19,10 @@ def ModifyToCSV(filename):
 
     print(df)
 
-    df["VDD_VCO1_amps"] = ShuntCalc(df["VDD_VCO1_shunt"], 1000)
-    df["VDD_VCO2_amps"] = ShuntCalc(df["VDD_VCO2_shunt"], 1000)
-    df["VDD_driver_amps"] = ShuntCalc(df["VDD_driver_shunt"], 1000)
-    df["VDD_ring_amps"] = ShuntCalc(df["VDD_ring_shunt"], 1000)
+    df["VDD_VCO1_amps"] = ShuntCalc(df["VDD_VCO1_shunt"], 52.51)
+    df["VDD_VCO2_amps"] = ShuntCalc(df["VDD_VCO2_shunt"], 52.28)
+    df["VDD_driver_amps"] = ShuntCalc(df["VDD_driver_shunt"], 5.72)
+    df["VDD_ring_amps"] = ShuntCalc(df["VDD_ring_shunt"], 985)
 
     df.to_csv(outputPath, index=False)
 

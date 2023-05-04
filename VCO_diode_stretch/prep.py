@@ -9,16 +9,31 @@ def ShuntCalc(voltageDiff: float, shuntResistance: float) -> float:
     return voltageDiff / shuntResistance
 
 
-def RosetteCalc(gaugeResistances: Tuple[float, float, float], gaugeBases: Tuple[float, float, float], gagefactor=2.16) -> Tuple[float, float, float]:
-    y, x, xy = gaugeResistances
-    bx, by, bxy = gaugeBases
+def RosetteCalc(gageResistances: Tuple[float, float, float], gagebases: Tuple[float, float, float], angle: float, gagefactor=2.16) -> Tuple[float, float]:
+    y,x, xy = gageResistances
+    bx, by, bxy = gagebases
     ex, ey, ez = (x-bx) / gagefactor, (y-by) / gagefactor, (xy-bxy) / gagefactor
+    print(f"ex:{ex:.3f},ey:{ey:.3f},ez:{ez:.3f} @ {angle}")
     exy = ez - (ex+ey)/2
     m = np.array([[ex, exy], [exy, ey]])
     w,v = np.linalg.eig(m)
-    print(f"m: \n{m}, \nvals: {w}, \nvecs: \n{np.rad2deg(np.arctan2(v[:,0], v[:,1]))}")
+    # print(v,w)
+    angles = np.rad2deg(np.arctan2(v[:,1], v[:,0]))
+    print(f"m: \n{m}\n{v}, \nvals: {w}, \nangles: \n{angles}, real angle: {angle}")
 
-    return (ex, ey)
+    if w[0] > 0:
+        if angles[0] < -90:
+            angles[0] = angles[0] + 180
+        angle = angles[0]
+    elif w[1] > 0:
+        if angles[1] < -90:
+            angles[1] = angles[1] + 180
+        angle = angles[1]
+    else:
+        angle = np.NaN
+
+    # return ((angles[0] if w[0] > 0 else (angles[1] if w[1] > 0 else np.NaN)), max(w))
+    return (angle, max(w))
 
 
 def ModifyToCSV(filename):
@@ -31,11 +46,11 @@ def ModifyToCSV(filename):
 
     print(df)
 
-    df["VDD_VCO1_amps"] = ShuntCalc(df["VDD_VCO1_shunt"], 1000)
-    df["VDD_VCO2_amps"] = ShuntCalc(df["VDD_VCO2_shunt"], 1000)
-    df["VDD_driver_amps"] = ShuntCalc(df["VDD_driver_shunt"], 1000)
-    df["VDD_ring_amps"] = ShuntCalc(df["VDD_ring_shunt"], 1000)
-    df["Diode_amps"] = ShuntCalc(df["V_diode_shunt"], 1000)
+    df["VDD_VCO1_amps"] = ShuntCalc(df["VDD_VCO1_shunt"], 52.51)
+    df["VDD_VCO2_amps"] = ShuntCalc(df["VDD_VCO2_shunt"], 52.28)
+    df["VDD_driver_amps"] = ShuntCalc(df["VDD_driver_shunt"], 5.72)
+    df["VDD_ring_amps"] = ShuntCalc(df["VDD_ring_shunt"], 985)
+    df["Diode_amps"] = ShuntCalc(df["V_diode_shunt"], 1001)
 
     # the occiloscope only uses the last 512 values for the mean, so this puts limits on the uncertainty of the mean
     df["AmtFreq1"] = df["AmtFreq1"].map(lambda x: min(512, x))
@@ -55,11 +70,11 @@ def diodeCSV(filename):
                   "VDD_VCO2_shunt", "VDD_ring_shunt", "strain_1", "strain_2", "strain_3", "temp", "V_diode_shunt", "V_diode"]
     print(df)
 
-    df["VDD_VCO1_amps"] = ShuntCalc(df["VDD_VCO1_shunt"], 1000)
-    df["VDD_VCO2_amps"] = ShuntCalc(df["VDD_VCO2_shunt"], 1000)
-    df["VDD_driver_amps"] = ShuntCalc(df["VDD_driver_shunt"], 1000)
-    df["VDD_ring_amps"] = ShuntCalc(df["VDD_ring_shunt"], 1000)
-    df["Diode_amps"] = ShuntCalc(df["V_diode_shunt"], 1000)
+    df["VDD_VCO1_amps"] = ShuntCalc(df["VDD_VCO1_shunt"], 52.51)
+    df["VDD_VCO2_amps"] = ShuntCalc(df["VDD_VCO2_shunt"], 52.28)
+    df["VDD_driver_amps"] = ShuntCalc(df["VDD_driver_shunt"], 5.72)
+    df["VDD_ring_amps"] = ShuntCalc(df["VDD_ring_shunt"], 985)
+    df["Diode_amps"] = ShuntCalc(df["V_diode_shunt"], 1001)
 
     # there is a -1.2V added after the value shown in Vtarget, this is intentional so should be represented
     df["Vtarget"] = df["Vtarget"] - 1.2
@@ -134,6 +149,9 @@ if (__name__ == "__main__"):
     meas = "meas_3"
     filename = "Measurement_stretch_3"
 
+    # gageBaseResistances = (350.7475,350.93787,350.61167)
+    
+
     diodeFilename = filename + "_diode"
 
     if not os.path.exists(f'./VCO_diode_stretch/data/{meas}'):
@@ -142,16 +160,26 @@ if (__name__ == "__main__"):
     ModifyToCSV(filename)
     diodeCSV(diodeFilename)
     df = importCSV(f"./VCO_diode_stretch/data/{meas}/{filename}.csv")
+    
+
+    # to calculate the base resistances of the strain gages we take the averages of the unstretched measurements
+    groups = df[df["stretchAmt"] == 0]
+    strain_1_avg = groups["strain_1"].mean()
+    strain_2_avg = groups["strain_2"].mean()
+    strain_3_avg = groups["strain_3"].mean()
+    # we also calculate the standard-deviations to see if there are any big outliers
+    strain_1_std = groups["strain_1"].std()
+    strain_2_std = groups["strain_2"].std()
+    strain_3_std = groups["strain_3"].std()
+    print(f"strain_1: {strain_1_avg}/{strain_1_std}\nstrain_2: {strain_2_avg}/{strain_2_std}\nstrain_3: {strain_3_avg}/{strain_3_std}")
+    gageBaseResistances = (strain_1_avg, strain_2_avg, strain_3_avg)
+    df["angle"] = df.apply(lambda x: RosetteCalc((x['strain_1'], x['strain_2'], x['strain_3']), gageBaseResistances, x['stretchAngle'])[0], axis=1)
+    df["strain"] = df.apply(lambda x: RosetteCalc((x['strain_1'], x['strain_2'], x['strain_3']), gageBaseResistances, x['stretchAngle'])[1], axis=1)
+    print(df)
     splitAngles(df)
 
     df2 = importDiodeCSV(f"./VCO_diode_stretch/data/{meas}/{diodeFilename}.csv")
     splitAngles(df2, affix="_diode")
+    print(f"strain_1: {strain_1_avg}/{strain_1_std}\nstrain_2: {strain_2_avg}/{strain_2_std}\nstrain_3: {strain_3_avg}/{strain_3_std}")
 
 
-RosetteCalc((350.06729,351.67155,350.57103), (350,350,350)) # 0
-RosetteCalc((350.28975,351.61059,350.24055), (350,350,350)) # 15
-RosetteCalc((350.44376,351.44695,349.94644), (350,350,350)) # 30
-RosetteCalc((350.79562,351.09402,349.96355), (350,350,350)) # 45
-RosetteCalc((351.10899,350.81701,350.06943), (350,350,350)) # 60
-RosetteCalc((351.38920,350.55605,350.27050), (350,350,350)) # 75
-RosetteCalc((351.59775,350.33467,350.59884), (350,350,350)) # 90

@@ -132,18 +132,18 @@ if __name__ == "__main__":
     meas = "meas_3"
 
     angle = input("please give the whole part of the angle to plot. ")
-    df = importCSV(f"./data/{meas}/falling/angle_{angle}.0.csv")
-    if not os.path.exists(f'./figures/{meas}/'):
-        os.makedirs(f'./figures/{meas}/')
-    if not os.path.exists(f'./figures/{meas}/{angle}/'):
-        os.makedirs(f'./figures/{meas}/{angle}/')
+    df = importCSV(f"./VCO_diode_stretch/data/{meas}/falling/angle_{angle}.0.csv")
+    if not os.path.exists(f'./VCO_diode_stretch/figures/{meas}/'):
+        os.makedirs(f'./VCO_diode_stretch/figures/{meas}/')
+    if not os.path.exists(f'./VCO_diode_stretch/figures/{meas}/{angle}/'):
+        os.makedirs(f'./VCO_diode_stretch/figures/{meas}/{angle}/')
     # print(df)
     fig = MakeStretchGraph1(df)
-    fig.savefig(f"./figures/{meas}/{angle}/stretch1_down_{angle}.png", dpi=500)
+    fig.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_down_{angle}.png", dpi=500)
     fig2 = RelativeStretchGraph1(df)
-    fig2.savefig(f"./figures/{meas}/{angle}/stretch1_down_{angle}_rel.png", dpi=500)
+    fig2.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_down_{angle}_rel.png", dpi=500)
     fig3 = MakeStretchGraph2(df)
-    fig3.savefig(f"./figures/{meas}/{angle}/stretch2_down_{angle}.png", dpi=500)
+    fig3.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch2_down_{angle}.png", dpi=500)
     fig4 = RelativeStretchGraph2(df)
-    fig4.savefig(f"./figures/{meas}/{angle}/stretch2_down_{angle}_rel.png", dpi=500)
+    fig4.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch2_down_{angle}_rel.png", dpi=500)
     # plt.show()
