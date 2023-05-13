@@ -12,7 +12,7 @@ def RelativeStretchGraphAmps(dataframe, column):
     df2 = dataframe.copy()
 
     dfFirst = df2[df2['stretchAmt'] == 0]
-    firstCur = dfFirst[column].values[0:13]
+    firstCur = dfFirst[column].values[0:130]
 
     ax.set_xlabel(f"Vctrl (V)")
     ax.set_ylabel(f"Current relative to 0 strain")
@@ -36,7 +36,7 @@ def AbsStretchGraphAmps(dataframe, column):
     numLines = dataframe["stretchAmt"].nunique()
 
     ax.set_xlabel(f"Vctrl (V)")
-    ax.set_ylabel(f"Current relative to 0 strain")
+    ax.set_ylabel(f"Current (A)")
     ax.set_prop_cycle(helpers.MkCycle(numLines))
 
     for lab, df in dataframe.groupby("stretchAmt"):
@@ -51,10 +51,33 @@ def AbsStretchGraphAmps(dataframe, column):
     return fig
 
 
+def AbsStretchGraphAmps2(dataframe, column):
+    fig, ax = plt.subplots(1, 1, figsize=(8, 6))
+    numLines = dataframe["stretchAmt"].nunique()
+
+    ax.set_xlabel(f"Vctrl (V)")
+    ax.set_ylabel(f"Current (A)")
+    ax.set_prop_cycle(helpers.MkCycle(numLines*2))
+
+    for lab, df in dataframe.groupby("stretchAmt"):
+        print(df)
+        label = f"{(lab/L0 * 100):.3f}% {helpers.RelativeToRadius(lab/L0) * 1000:.2f} mm"
+        ax.errorbar(df["Freq1"], df[column], 
+                    capsize=None, lw=1, label=f"chip 1 {label}")
+        ax.errorbar(df["Freq2"], df[column], 
+                    capsize=None, lw=1, label=f"chip 2 {label}")
+
+    ax.grid()
+    lines_to_include = [ax.lines[i] for i in range(0, len(ax.lines), 2)]
+
+    ax.legend()
+    fig.tight_layout()
+    return fig
+
 if __name__ == "__main__":
 
     L0 = 0.1001
-    meas = "meas_3"
+    meas = "meas_4"
 
     angle = input("please give the whole part of the angle to plot. ")
     df = helpers.importCSV(f"./VCO_diode_stretch/data/{meas}/rising/angle_{angle}.0.csv")
@@ -65,20 +88,22 @@ if __name__ == "__main__":
         os.makedirs(f'./VCO_diode_stretch/figures/{meas}/{angle}/')
     # print(df)
     fig1 = AbsStretchGraphAmps(df,"VDD_VCO1_amps")
-    fig1.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD1_amps.png", dpi=500)
+    fig1.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_VDD1_amps.png", dpi=500)
     fig2 = AbsStretchGraphAmps(df,"VDD_VCO2_amps")
-    fig2.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD2_amps.png", dpi=500)
+    fig2.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_VDD2_amps.png", dpi=500)
     fig3 = AbsStretchGraphAmps(df,"VDD_driver_amps")
-    fig3.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_driver_amps.png", dpi=500)
+    fig3.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_driver_amps.png", dpi=500)
     fig4 = AbsStretchGraphAmps(df,"VDD_ring_amps")
-    fig4.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_ring_amps.png", dpi=500)
+    fig4.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_ring_amps.png", dpi=500)
     fig5 = RelativeStretchGraphAmps(df,"VDD_VCO1_amps")
-    fig5.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD1_amps_rel.png", dpi=500)
+    fig5.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_VDD1_amps_rel.png", dpi=500)
     fig6 = RelativeStretchGraphAmps(df,"VDD_VCO2_amps")
-    fig6.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_VDD2_amps_rel.png", dpi=500)
+    fig6.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_VDD2_amps_rel.png", dpi=500)
     fig7 = RelativeStretchGraphAmps(df,"VDD_driver_amps")
-    fig7.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_driver_amps_rel.png", dpi=500)
+    fig7.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_driver_amps_rel.png", dpi=500)
     fig8 = RelativeStretchGraphAmps(df,"VDD_ring_amps")
-    fig8.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch1_up_{angle}_ring_amps_rel.png", dpi=500)
+    fig8.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_ring_amps_rel.png", dpi=500)
+    fig9 = AbsStretchGraphAmps2(df,"VDD_driver_amps")
+    fig9.savefig(f"./VCO_diode_stretch/figures/{meas}/{angle}/stretch_up_{angle}_freq_driver_amps.png", dpi=500)
 
     # plt.show()

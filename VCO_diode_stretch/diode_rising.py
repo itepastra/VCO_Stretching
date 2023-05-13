@@ -59,7 +59,7 @@ def RelativeStretchGraph1(dataframe):
     df2 = dataframe.copy()
 
     dfFirst = df2[df2['stretchAmt'] == 0]
-    firstDiode = dfFirst["Diode_amps"].values[0:143]
+    firstDiode = dfFirst["Diode_amps"].values[0:650]
 
     ax.set_xlabel(f"Vdiode (V)")
     ax.set_ylabel(f"relative Amps")
@@ -103,7 +103,7 @@ def RelativeStretchGraph2(dataframe):
     df2 = dataframe.copy()
 
     dfFirst = df2[df2['stretchAmt'] == 0]
-    firstDiode = averageDiode = df2.groupby("Vtarget")["V_diode"].mean().values[0:143]
+    firstDiode = averageDiode = df2.groupby("Vtarget")["V_diode"].mean().values[0:650]
 
     ax.set_xlabel(f"amps (A)")
     ax.set_ylabel(f"relative voltage")
@@ -146,7 +146,7 @@ def RelativeStretchGraph3(dataframe):
     df2 = dataframe.copy()
 
     dfFirst = df2[df2['stretchAmt'] == 0]
-    firstDiode = dfFirst["Diode_amps"].values[0:143]
+    firstDiode = dfFirst["Diode_amps"].values[0:650]
 
     ax.set_xlabel(f"V_input (V)")
     ax.set_ylabel(f"relative Amps")
@@ -171,7 +171,7 @@ def RelativeStretchGraph4(dataframe):
 
     df2 = dataframe.copy()
 
-    averageDiode = df2.groupby("Vtarget")["Diode_amps"].mean().values[0:143]
+    averageDiode = df2.groupby("Vtarget")["Diode_amps"].mean().values[0:650]
     print(averageDiode)
 
     ax.set_xlabel(f"V_input (V)")
@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     
     L0 = 0.1001
-    meas = "meas_3"
+    meas = "meas_4"
 
     angle = input("please give the whole part of the angle to plot. ")
     df = importCSV(f"./VCO_diode_stretch/data/{meas}/rising/angle_{angle}.0_diode.csv")

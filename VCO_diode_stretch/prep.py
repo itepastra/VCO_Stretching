@@ -10,16 +10,18 @@ def ShuntCalc(voltageDiff: float, shuntResistance: float) -> float:
 
 
 def RosetteCalc(gageResistances: Tuple[float, float, float], gagebases: Tuple[float, float, float], angle: float, gagefactor=2.16) -> Tuple[float, float]:
-    y,x, xy = gageResistances
+    y, x, xy = gageResistances
     bx, by, bxy = gagebases
-    ex, ey, ez = (x-bx) / gagefactor, (y-by) / gagefactor, (xy-bxy) / gagefactor
-    print(f"ex:{ex:.3f},ey:{ey:.3f},ez:{ez:.3f} @ {angle}")
+    ex, ey, ez = (x-bx) / (bx * gagefactor), (y-by) / \
+        (by * gagefactor), (xy-bxy) / (bxy * gagefactor)
+    print(f"ex:{ex},ey:{ey},ez:{ez} @ {angle}")
     exy = ez - (ex+ey)/2
     m = np.array([[ex, exy], [exy, ey]])
-    w,v = np.linalg.eig(m)
+    w, v = np.linalg.eig(m)
     # print(v,w)
-    angles = np.rad2deg(np.arctan2(v[:,1], v[:,0]))
-    print(f"m: \n{m}\n{v}, \nvals: {w}, \nangles: \n{angles}, real angle: {angle}")
+    angles = np.rad2deg(np.arctan2(v[:, 1], v[:, 0]))
+    print(
+        f"m: \n{m}\n{v}, \nvals: {w}, \nangles: \n{angles}, real angle: {angle}")
 
     if w[0] > 0:
         if angles[0] < -90:
@@ -150,7 +152,6 @@ if (__name__ == "__main__"):
     filename = "Measurement_stretch_3"
 
     # gageBaseResistances = (350.7475,350.93787,350.61167)
-    
 
     diodeFilename = filename + "_diode"
 
@@ -160,7 +161,6 @@ if (__name__ == "__main__"):
     ModifyToCSV(filename)
     diodeCSV(diodeFilename)
     df = importCSV(f"./VCO_diode_stretch/data/{meas}/{filename}.csv")
-    
 
     # to calculate the base resistances of the strain gages we take the averages of the unstretched measurements
     groups = df[df["stretchAmt"] == 0]
@@ -173,13 +173,16 @@ if (__name__ == "__main__"):
     strain_3_std = groups["strain_3"].std()
     print(f"strain_1: {strain_1_avg}/{strain_1_std}\nstrain_2: {strain_2_avg}/{strain_2_std}\nstrain_3: {strain_3_avg}/{strain_3_std}")
     gageBaseResistances = (strain_1_avg, strain_2_avg, strain_3_avg)
-    df["angle"] = df.apply(lambda x: RosetteCalc((x['strain_1'], x['strain_2'], x['strain_3']), gageBaseResistances, x['stretchAngle'])[0], axis=1)
-    df["strain"] = df.apply(lambda x: RosetteCalc((x['strain_1'], x['strain_2'], x['strain_3']), gageBaseResistances, x['stretchAngle'])[1], axis=1)
+    df["angle"] = df.apply(lambda x: RosetteCalc(
+        (x['strain_1'], x['strain_2'], x['strain_3']), gageBaseResistances, x['stretchAngle'])[0], axis=1)
+    df["strain"] = df.apply(lambda x: RosetteCalc(
+        (x['strain_1'], x['strain_2'], x['strain_3']), gageBaseResistances, x['stretchAngle'])[1], axis=1)
     print(df)
     splitAngles(df)
 
-    df2 = importDiodeCSV(f"./VCO_diode_stretch/data/{meas}/{diodeFilename}.csv")
+    df.to_csv(f"./VCO_diode_stretch/data/{meas}/{filename}.csv")
+
+    df2 = importDiodeCSV(
+        f"./VCO_diode_stretch/data/{meas}/{diodeFilename}.csv")
     splitAngles(df2, affix="_diode")
     print(f"strain_1: {strain_1_avg}/{strain_1_std}\nstrain_2: {strain_2_avg}/{strain_2_std}\nstrain_3: {strain_3_avg}/{strain_3_std}")
-
-

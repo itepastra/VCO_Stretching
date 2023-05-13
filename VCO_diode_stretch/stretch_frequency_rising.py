@@ -56,8 +56,8 @@ def RelativeStretchGraph1(dataframe):
     df2 = dataframe.copy()
 
     dfFirst = df2[df2['stretchAmt'] == 0]
-    firstFreq = dfFirst["Freq1"].values[0:13]
-    firstErr = dfFirst["errFreq1"].values[0:13]
+    firstFreq = dfFirst["Freq1"].values[0:130]
+    firstErr = dfFirst["errFreq1"].values[0:130]
 
     ax.set_xlabel(f"Vctrl (V)")
     ax.set_ylabel(f"relative Frequency")
@@ -103,8 +103,8 @@ def RelativeStretchGraph2(dataframe):
     df2 = dataframe.copy()
 
     dfFirst = df2[df2['stretchAmt'] == 0]
-    firstFreq = dfFirst["Freq2"].values[0:13]
-    firstErr = dfFirst["errFreq2"].values[0:13]
+    firstFreq = dfFirst["Freq2"].values[0:130]
+    firstErr = dfFirst["errFreq2"].values[0:130]
 
     ax.set_xlabel(f"Vctrl (V)")
     ax.set_ylabel(f"relative Frequency")
@@ -129,7 +129,7 @@ if __name__ == "__main__":
 
     
     L0 = 0.1001
-    meas = "meas_3"
+    meas = "meas_4"
 
     angle = input("please give the whole part of the angle to plot. ")
     df = importCSV(f"./VCO_diode_stretch/data/{meas}/rising/angle_{angle}.0.csv")
