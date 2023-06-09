@@ -181,6 +181,7 @@ def strainGauge():
 
 
 if __name__ == "__main__":
+    plt.rcParams['figure.figsize'] = 8,6
 
     L0 = 0.1001
 
@@ -194,5 +195,5 @@ if __name__ == "__main__":
     plt.plot(np.rad2deg(xs), sgfit["fitfunc"](xs), label = f"strain gauges: ${sgfit['amp']:.2f}cos(2x){'+' if sgfit['offset'] >= 0 else ''}{sgfit['offset']:.2f}$")
 
     plt.legend()
-    plt.savefig("VCO_diode_stretch/figures/angleswithgauges.png", dpi=500)
+    plt.savefig("VCO_diode_stretch/figures/angleswithgauges.png", dpi=1000)
     plt.show()
