@@ -127,11 +127,11 @@ def micrometer():
         finalang.append(lab)
 
 
-    plt.errorbar(finalang, finalavg, finalerr, fmt="o")
+    plt.errorbar(finalang, finalavg, finalerr, fmt="o", label= "micrometer factors")
     res = fit_sin(finalang, finalavg)
     print(res)
 
-    return res["fitfunc"]
+    return res
 
 
 def strainGauge():
@@ -172,12 +172,12 @@ def strainGauge():
         finalerr.append(df["gaugefactors"].std())
         finalang.append(lab)
 
-    plt.errorbar(finalang, finalavg, finalerr, fmt="o")
+    plt.errorbar(finalang, finalavg, finalerr, fmt="o", label = "strain gauge factors")
 
     res = fit_sin(finalang, finalavg)
     print(res)
 
-    return res["fitfunc"]
+    return res
 
 
 if __name__ == "__main__":
@@ -190,8 +190,8 @@ if __name__ == "__main__":
 
     xs = np.linspace(0,np.deg2rad(360),1000)
 
-    plt.plot(np.rad2deg(xs), mmfit(xs), linestyle="dotted", label = "mmfit")
-    plt.plot(np.rad2deg(xs), sgfit(xs), label = "sgfit")
+    plt.plot(np.rad2deg(xs), mmfit["fitfunc"](xs), linestyle="dashed", label = f"micrometer: ${mmfit['amp']:.2f}cos(2x){'+' if mmfit['offset'] >= 0 else ''}{mmfit['offset']:.2f}$")
+    plt.plot(np.rad2deg(xs), sgfit["fitfunc"](xs), label = f"strain gauges: ${sgfit['amp']:.2f}cos(2x){'+' if sgfit['offset'] >= 0 else ''}{sgfit['offset']:.2f}$")
 
     plt.legend()
     plt.savefig("VCO_diode_stretch/figures/angleswithgauges.png", dpi=500)
