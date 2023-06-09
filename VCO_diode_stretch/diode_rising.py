@@ -197,7 +197,7 @@ if __name__ == "__main__":
 
     
     L0 = 0.1001
-    meas = "meas_4"
+    meas = "meas_3"
 
     angle = input("please give the whole part of the angle to plot. ")
     df = importCSV(f"./VCO_diode_stretch/data/{meas}/rising/angle_{angle}.0_diode.csv")

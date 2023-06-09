@@ -55,16 +55,16 @@ def AbsStretchGraphAmps2(dataframe, column):
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
     numLines = dataframe["stretchAmt"].nunique()
 
-    ax.set_xlabel(f"Vctrl (V)")
+    ax.set_xlabel(f"Frequency (MHz)")
     ax.set_ylabel(f"Current (A)")
     ax.set_prop_cycle(helpers.MkCycle(numLines*2))
 
     for lab, df in dataframe.groupby("stretchAmt"):
         print(df)
         label = f"{(lab/L0 * 100):.3f}% {helpers.RelativeToRadius(lab/L0) * 1000:.2f} mm"
-        ax.errorbar(df["Freq1"], df[column], 
+        ax.errorbar(df["Freq1"]/1e6, df[column], 
                     capsize=None, lw=1, label=f"chip 1 {label}")
-        ax.errorbar(df["Freq2"], df[column], 
+        ax.errorbar(df["Freq2"]/1e6, df[column], 
                     capsize=None, lw=1, label=f"chip 2 {label}")
 
     ax.grid()

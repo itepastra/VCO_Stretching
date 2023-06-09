@@ -24,15 +24,11 @@ def RosetteCalc(gageResistances: Tuple[float, float, float], gagebases: Tuple[fl
         f"m: \n{m}\n{v}, \nvals: {w}, \nangles: \n{angles}, real angle: {angle}")
 
     if w[0] > 0:
-        if angles[0] < -90:
-            angles[0] = angles[0] + 180
         angle = angles[0]
     elif w[1] > 0:
-        if angles[1] < -90:
-            angles[1] = angles[1] + 180
         angle = angles[1]
     else:
-        angle = np.NaN
+        angle=np.NaN
 
     # return ((angles[0] if w[0] > 0 else (angles[1] if w[1] > 0 else np.NaN)), max(w))
     return (angle, max(w))
@@ -151,7 +147,7 @@ if (__name__ == "__main__"):
     meas = "meas_3"
     filename = "Measurement_stretch_3"
 
-    # gageBaseResistances = (350.7475,350.93787,350.61167)
+    # gageBaseResistances = (350,350,350)
 
     diodeFilename = filename + "_diode"
 
