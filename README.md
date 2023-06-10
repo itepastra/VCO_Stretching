@@ -13,3 +13,7 @@ figures are available in the repo, most of the used figures are located in VCO_d
 
 The raw data is available as a txt file with `\t` seperated entries in VCO_diode_stretch/measurements.
 The prep.py program processes this raw data into multiple .csv files located in VCO_diode_stretch/data, this is the data used in the paper.
+
+## Labview
+
+The labview code has not been uploaded yet, sorry. But I'll upload it as soon as I have time
